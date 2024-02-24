@@ -1,0 +1,22 @@
+.BatchDetail{
+    margin-bottom: 30px;
+}
+.Icon{
+    padding-top: 0px;
+    float: left;
+    margin-right: 15px;
+    zoom: 1;
+    vertical-align: middle;
+    position: relative;
+    line-height: 1;
+    color:#0DB561;
+    font-size: 22px;
+    width: 22px;
+    display: inline-block;
+    text-align: center;
+}
+.info{
+    font-size: 17px;  
+    font-weight: bold;
+    display: block;
+}

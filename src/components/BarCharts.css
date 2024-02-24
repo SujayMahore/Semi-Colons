@@ -1,0 +1,71 @@
+/* Container styles */
+.chart-container {
+   margin: 40px;
+   
+    
+  }
+  .heading{
+    font-weight: bold;
+  }
+
+  .grid-container{
+    display:grid;
+    grid-template-columns: repeat(2,1fr);
+    gap:20px
+  }
+
+  .chart{
+    border:1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+  }
+   
+  /* Bar chart styles */
+  .recharts-wrapper {
+    font-family: Arial, sans-serif;
+  }
+   
+  /* Axis styles */
+  .recharts-cartesian-axis-tick {
+    font-size: 12px;
+  }
+   
+  .recharts-cartesian-axis-label {
+    font-size: 14px;
+    font-weight: bold;
+  }
+   
+  /* Tooltip styles */
+  .recharts-tooltip-wrapper {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+  }
+   
+  .recharts-tooltip-label {
+    font-weight: bold;
+  }
+   
+  .recharts-tooltip-item {
+    color: #333;
+  }
+   
+  /* Legend styles */
+  .recharts-legend-wrapper {
+    font-size: 14px;
+  }
+   
+  .recharts-legend-item {
+    cursor: pointer;
+  }
+   
+  .recharts-legend-item-text {
+    fill: #333;
+  }
+   
+  /* Bar styles */
+  .recharts-bar {
+    fill: #8884d8;
+  }
