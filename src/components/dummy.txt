@@ -1,25 +1,25 @@
- const handleDownloadPDF = () => {
-    html2canvas(chartRef.current).then((chartCanvas) => {
-      html2canvas(tableRef.current).then((tableCanvas) => {
-        const chartImgData = chartCanvas.toDataURL("image/png");
-        const tableImgData = tableCanvas.toDataURL("image/png");
+const handleDownloadPDF = () => {
+  const pdf = new jsPDF("p", "mm", "a4");
 
-        const pdf = new jsPDF("p", "mm", "a4");
-
-        const imgWidth = 208;
-        const chartImgHeight = (chartCanvas.height * imgWidth) / chartCanvas.width;
-        const tableImgHeight = (tableCanvas.height * imgWidth) / tableCanvas.width;
-
-        let position = 0;
-
-        // Add chart image
-        pdf.addImage(chartImgData, "PNG", 0, position, imgWidth, chartImgHeight);
-        position += chartImgHeight;
-
-        // Add table image
-        pdf.addImage(tableImgData, "PNG", 0, position, imgWidth, tableImgHeight);
-
-        pdf.save("download.pdf");
-      });
+  const chartsPromises = dataKeys.map((key, index) => {
+    return html2canvas(document.querySelector(`#chart-${index}`)).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const imgWidth = 208;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, "PNG", 0, index * imgHeight, imgWidth, imgHeight);
+      return Promise.resolve();
     });
-  };
+  });
+
+  const tablePromise = html2canvas(tableRef.current).then((canvas) => {
+    const imgData = canvas.toDataURL("image/png");
+    const imgWidth = 208;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    pdf.addImage(imgData, "PNG", 0, dataKeys.length * 50, imgWidth, imgHeight);
+    return Promise.resolve();
+  });
+
+  Promise.all([...chartsPromises, tablePromise]).then(() => {
+    pdf.save("download.pdf");
+  });
+};
