@@ -30,9 +30,7 @@ import AreaChartTemplate from "./AreaChartTemplate";
 const ChartTemplate = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [dataKeys, setDataKeys] = useState(["protien"]);
-  const [chartCount, setChartCount] = useState(1);
-  const [chartTypes, setChartTypes] = useState([])
+  const [dataKeys, setDataKeys] = useState(["protein","SGOT"]);
 
   //Un Comment This For API CALL
   // const [data,setData]=useState([])
@@ -139,12 +137,14 @@ const ChartTemplate = () => {
       key !== "reportId"
   );
   const filteredData = data.map(({ user, reportName, ...rest }) => rest);
-  function handleChange(e) {
-   const updatedKeys=dataKeys
-   updatedKeys.push(e.target.value)
-   setDataKeys(updatedKeys)
-    console.log(dataKeys);
-  }
+  const handleAddChart = () => {
+    setDataKeys([...dataKeys, ""]);
+  };
+  const handleChange = (index, e) => {
+    const updatedKeys = [...dataKeys];
+    updatedKeys[index] = e.target.value;
+    setDataKeys(updatedKeys);
+  };
 
   return (
     <>
@@ -176,9 +176,9 @@ const ChartTemplate = () => {
           </div>
           <div className="chart-container">
             {/* Apply container style */}
-            {/* <button onClick={() => setChartCount((prev) => prev + 1)}>
+            <button  onClick={handleAddChart} className="add-chart-button">
               Add Chart
-            </button> */}
+            </button>
 
             <div className="grid-container">
               {/* {[...Array(chartCount)].map((_, idx) => (
@@ -209,22 +209,34 @@ const ChartTemplate = () => {
                   </div>
                 </div>
               ))} */}
-               <AreaChartTemplate
+              {dataKeys.map((key, index) => (
+                <div key={index}>
+                  <AreaChartTemplate
                     data={data}
-                    datakey="protein"
+                    datakey={key}
                   ></AreaChartTemplate>
-               <AreaChartTemplate
-                    data={data}
-                    datakey="SGOT"
-                  ></AreaChartTemplate>
-               <AreaChartTemplate
-                    data={data}
-                    datakey="alkalinePhosphate"
-                  ></AreaChartTemplate>
-               <AreaChartTemplate
-                    data={data}
-                    datakey="globulin"
-                  ></AreaChartTemplate>
+                  <div className="input-select">
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Chart Data
+                      </InputLabel> 
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={key}
+                        label="Select Chart"
+                        onChange={(e)=> handleChange(index,e)}
+                      >
+                        {fields.map((field) => (
+                          <MenuItem key={field} value={field}>
+                            {field}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
           <div
