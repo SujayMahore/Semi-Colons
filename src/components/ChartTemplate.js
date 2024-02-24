@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
-import "./BarCharts.css";
+import "./ChartTemplate.css";
 import LineChartCustom from "./LineChartCustom";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 import {
   BarChart,
@@ -23,233 +28,213 @@ import axios from "axios";
 import AreaChartTemplate from "./AreaChartTemplate";
 
 const ChartTemplate = () => {
-    //Un Comment This For API CALL
-    // const [data,setData]=useState([])
-    // useEffect(()=>{
-    //     const fetchData = async()=>{
-    //         try{
-    //             const response = await axios.get("Past API ENDPOINT HERE")
-    //             setData(response.data)
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [dataKeys, setDataKeys] = useState(["protien"]);
+  const [chartCount, setChartCount] = useState(1);
+  const [chartTypes, setChartTypes] = useState([])
 
-    //         }catch(error){
-    //             console.error("ERROR fetching data",error)
-    //         }
-    //     }
-    //     fetchData();
-    // },[])
+  //Un Comment This For API CALL
+  // const [data,setData]=useState([])
+  // useEffect(()=>{
+  //     const fetchData = async()=>{
+  //         try{
+  //             const response = await axios.get("Past API ENDPOINT HERE")
 
-    //Comment below if api is called
-  const data =[
+  //             setData(response.data)
+  //              setIsLoading(false)
+
+  //         }catch(error){
+  //             console.error("ERROR fetching data",error)
+  //              setIsLoading(false)
+  //              setError(error)
+
+  //         }
+  //     }
+  //     fetchData();
+  // },[])
+
+  //Comment below if api is called
+
+  const data = [
     {
-        "reportId": 1,
-        "date": "11/06/2023",
-        "hemoglobin": 15.34,
-        "PackedCellVolume": 40.69,
-        "RBCCount": 6.0,
-        "MCV": 91.01,
-        "MCH": 30.69,
-        "MCHC": 33.05,
-        "RDW": 34.99,
-        "TLC": 31.82,
-        "PlateletCount": 151.39,
-        "MeanPlateletVolume": 11.83,
-        "DLC_Neutrophils": 51.54,
-        "DLC_Lymphocytes": 27.15,
-        "DLC_Monocytes": 3.66,
-        "DLC_Eosinophils": 4.07,
-        "DLC_Basophils": 0.35
+      reportId: 1,
+      date: "2024-02-24",
+      user: {
+        id: 123,
+        firstName: "John",
+        lastName: "Doe",
+        email: "john.doe@example.com",
+        address: "123 Main St",
+        city: "Anytown",
+        state: "CA",
+        zipCode: "12345",
+        age: "56",
+      },
+      reportName: "Liver Function Test",
+      bilirubin: 1.5,
+      SGOT: 30.5,
+      SGPT: 25.2,
+      alkalinePhosphate: 80.3,
+      protein: 7.2,
+      globulin: 3.8,
+      A_G_Ratio: 1.9,
+      GGTP: 40.0,
     },
     {
-        "reportId": 2,
-        "date": "04/10/2023",
-        "hemoglobin": 16.65,
-        "PackedCellVolume": 43.24,
-        "RBCCount": 5.42,
-        "MCV": 98.15,
-        "MCH": 27.56,
-        "MCHC": 31.71,
-        "RDW": 34.41,
-        "TLC": 31.49,
-        "PlateletCount": 179.46,
-        "MeanPlateletVolume": 6.89,
-        "DLC_Neutrophils": 69.11,
-        "DLC_Lymphocytes": 28.48,
-        "DLC_Monocytes": 3.07,
-        "DLC_Eosinophils": 4.75,
-        "DLC_Basophils": 1.1
+      reportId: 2,
+      date: "2024-02-24",
+      user: {
+        id: 124,
+        firstName: "Jane",
+        lastName: "Smith",
+        email: "jane.smith@example.com",
+        address: "456 Oak St",
+        city: "Othertown",
+        state: "NY",
+        zipCode: "54321",
+        age: "56",
+      },
+      reportName: "Liver Function Test",
+      bilirubin: 1.8,
+      SGOT: 35.2,
+      SGPT: 27.9,
+      alkalinePhosphate: 85.6,
+      protein: 7.5,
+      globulin: 4.0,
+      A_G_Ratio: 2.1,
+      GGTP: 45.0,
     },
     {
-        "reportId": 3,
-        "date": "13/09/2023",
-        "hemoglobin": 15.13,
-        "PackedCellVolume": 42.6,
-        "RBCCount": 4.71,
-        "MCV": 92.85,
-        "MCH": 31.63,
-        "MCHC": 32.16,
-        "RDW": 33.29,
-        "TLC": 31.99,
-        "PlateletCount": 238.86,
-        "MeanPlateletVolume": 9.8,
-        "DLC_Neutrophils": 58.08,
-        "DLC_Lymphocytes": 35.92,
-        "DLC_Monocytes": 2.74,
-        "DLC_Eosinophils": 1.62,
-        "DLC_Basophils": 0.2
+      reportId: 2,
+      date: "2024-02-24",
+      user: {
+        id: 124,
+        firstName: "Jane",
+        lastName: "Smith",
+        email: "jane.smith@example.com",
+        address: "456 Oak St",
+        city: "Othertown",
+        state: "NY",
+        zipCode: "54321",
+        age: "56",
+      },
+      reportName: "Liver Function Test",
+      bilirubin: 1.8,
+      SGOT: 35.2,
+      SGPT: 27.9,
+      alkalinePhosphate: 85.6,
+      protein: 7.5,
+      globulin: 4.0,
+      A_G_Ratio: 2.1,
+      GGTP: 45.0,
     },
-    {
-        "reportId": 4,
-        "date": "02/11/2023",
-        "hemoglobin": 13.06,
-        "PackedCellVolume": 43.75,
-        "RBCCount": 5.99,
-        "MCV": 89.35,
-        "MCH": 30.3,
-        "MCHC": 33.12,
-        "RDW": 32.81,
-        "TLC": 33.86,
-        "PlateletCount": 254.31,
-        "MeanPlateletVolume": 8.99,
-        "DLC_Neutrophils": 71.71,
-        "DLC_Lymphocytes": 34.59,
-        "DLC_Monocytes": 2.64,
-        "DLC_Eosinophils": 1.21,
-        "DLC_Basophils": 1.8
-    },
-    {
-        "reportId": 5,
-        "date": "06/02/2024",
-        "hemoglobin": 15.35,
-        "PackedCellVolume": 44.54,
-        "RBCCount": 4.81,
-        "MCV": 83.61,
-        "MCH": 30.95,
-        "MCHC": 31.89,
-        "RDW": 34.79,
-        "TLC": 34.23,
-        "PlateletCount": 315.71,
-        "MeanPlateletVolume": 9.64,
-        "DLC_Neutrophils": 72.83,
-        "DLC_Lymphocytes": 39.44,
-        "DLC_Monocytes": 8.98,
-        "DLC_Eosinophils": 4.34,
-        "DLC_Basophils": 1.96
-    },
-    {
-        "reportId": 6,
-        "date": "21/02/2023",
-        "hemoglobin": 15.16,
-        "PackedCellVolume": 45.0,
-        "RBCCount": 4.9,
-        "MCV": 93.29,
-        "MCH": 27.95,
-        "MCHC": 31.35,
-        "RDW": 31.78,
-        "TLC": 34.67,
-        "PlateletCount": 161.71,
-        "MeanPlateletVolume": 8.92,
-        "DLC_Neutrophils": 48.69,
-        "DLC_Lymphocytes": 25.9,
-        "DLC_Monocytes": 6.05,
-        "DLC_Eosinophils": 3.64,
-        "DLC_Basophils": 0.42
-    },
-    {
-        "reportId": 7,
-        "date": "28/01/2023",
-        "hemoglobin": 13.78,
-        "PackedCellVolume": 45.02,
-        "RBCCount": 5.83,
-        "MCV": 88.73,
-        "MCH": 28.06,
-        "MCHC": 32.06,
-        "RDW": 31.97,
-        "TLC": 33.34,
-        "PlateletCount": 366.92,
-        "MeanPlateletVolume": 10.26,
-        "DLC_Neutrophils": 67.91,
-        "DLC_Lymphocytes": 22.73,
-        "DLC_Monocytes": 7.35,
-        "DLC_Eosinophils": 5.78,
-        "DLC_Basophils": 1.77
-    },
-    {
-        "reportId": 8,
-        "date": "09/07/2023",
-        "hemoglobin": 15.11,
-        "PackedCellVolume": 46.07,
-        "RBCCount": 5.15,
-        "MCV": 90.3,
-        "MCH": 31.25,
-        "MCHC": 31.37,
-        "RDW": 33.14,
-        "TLC": 34.49,
-        "PlateletCount": 335.79,
-        "MeanPlateletVolume": 10.03,
-        "DLC_Neutrophils": 60.7,
-        "DLC_Lymphocytes": 39.35,
-        "DLC_Monocytes": 7.25,
-        "DLC_Eosinophils": 1.71,
-        "DLC_Basophils": 1.84
-    },
-    {
-        "reportId": 9,
-        "date": "21/08/2023",
-        "hemoglobin": 16.37,
-        "PackedCellVolume": 42.81,
-        "RBCCount": 4.94,
-        "MCV": 98.04,
-        "MCH": 30.81,
-        "MCHC": 33.81,
-        "RDW": 33.14,
-        "TLC": 31.7,
-        "PlateletCount": 247.73,
-        "MeanPlateletVolume": 8.84,
-        "DLC_Neutrophils": 64.99,
-        "DLC_Lymphocytes": 32.02,
-        "DLC_Monocytes": 2.59,
-        "DLC_Eosinophils": 5.27,
-        "DLC_Basophils": 1.64
-    },
-    {
-        "reportId": 10,
-        "date": "25/09/2023",
-        "hemoglobin": 15.33,
-        "PackedCellVolume": 49.04,
-        "RBCCount": 4.48,
-        "MCV": 91.37,
-        "MCH": 30.98,
-        "MCHC": 34.15,
-        "RDW": 34.26,
-        "TLC": 32.67,
-        "PlateletCount": 220.46,
-        "MeanPlateletVolume": 11.83,
-        "DLC_Neutrophils": 75.44,
-        "DLC_Lymphocytes": 35.7,
-        "DLC_Monocytes": 2.22,
-        "DLC_Eosinophils": 1.66,
-        "DLC_Basophils": 1.32
-    }
-]
+  ];
+
+  const fields = Object.keys(data[0]).filter(
+    (key) =>
+      key !== "date" &&
+      key !== "user" &&
+      key !== "reportName" &&
+      key !== "reportId"
+  );
+  const filteredData = data.map(({ user, reportName, ...rest }) => rest);
+  function handleChange(e) {
+   const updatedKeys=dataKeys
+   updatedKeys.push(e.target.value)
+   setDataKeys(updatedKeys)
+    console.log(dataKeys);
+  }
 
   return (
     <>
       {/* <Meter></Meter> */}
-      <div className="chart-container">
-        {/* Apply container style */}
-        <div className="grid-container">
-          <LineChartCustom data={data} datakey="hemoglobin"></LineChartCustom>
-         <AreaChartTemplate data={data} datakey="PackedCellVolume"></AreaChartTemplate>
-         <LineChartCustom data={data} datakey="PlateletCount"></LineChartCustom>
-         <LineChartCustom data={data} datakey="PackedCellVolume"></LineChartCustom>
-          
-        </div>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>Error:{error.message}</p>
+      ) : data.length === 0 ? (
+        <p>No Data Available</p>
+      ) : (
+        <>
+          <div className="user-info-container">
+            <h2>Patient Information</h2>
+            <div className="user-info">
+              <div>
+                <p>First Name:{data[0].user.firstName}</p>
+                <p>Last Name:{data[0].user.lastName}</p>
+                <p>Age :{data[0].user.age}</p>
+                <p>Email:{data[0].user.email}</p>
+              </div>
+              <div>
+                <p>Address:{data[0].user.address}</p>
+                <p>City:{data[0].user.city}</p>
+                <p>State:{data[0].user.state}</p>
+                <p>Zip code:{data[0].user.zipCode}</p>
+              </div>
+            </div>
+          </div>
+          <div className="chart-container">
+            {/* Apply container style */}
+            {/* <button onClick={() => setChartCount((prev) => prev + 1)}>
+              Add Chart
+            </button> */}
 
-
-
-      </div>
-      <TableData data={data}></TableData>
-
+            <div className="grid-container">
+              {/* {[...Array(chartCount)].map((_, idx) => (
+                <div>
+                  <AreaChartTemplate
+                    data={data}
+                    datakey={dataKeys[idx]}
+                  ></AreaChartTemplate>
+                  <div className="input-select">
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Chart Data{idx}
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={dataKeys[idx]}
+                        label="Select Chart"
+                        onChange={handleChange}
+                      >
+                        {fields.map((field) => (
+                          <MenuItem key={field} value={field}>
+                            {field}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </div>
+                </div>
+              ))} */}
+               <AreaChartTemplate
+                    data={data}
+                    datakey="protein"
+                  ></AreaChartTemplate>
+               <AreaChartTemplate
+                    data={data}
+                    datakey="SGOT"
+                  ></AreaChartTemplate>
+               <AreaChartTemplate
+                    data={data}
+                    datakey="alkalinePhosphate"
+                  ></AreaChartTemplate>
+               <AreaChartTemplate
+                    data={data}
+                    datakey="globulin"
+                  ></AreaChartTemplate>
+            </div>
+          </div>
+          <div
+            className="table-container"
+            style={{ width: "100%", marginTop: "10px", marginLeft: "40px" }}
+          >
+            <TableData data={data}></TableData>
+          </div>
+        </>
+      )}
     </>
   );
 };

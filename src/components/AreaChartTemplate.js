@@ -16,6 +16,7 @@ import {
   } from "recharts";
 
 const AreaChartTemplate = ({data,datakey}) => {
+    console.log(datakey)
   return (
     <>
         <div className="chart">
