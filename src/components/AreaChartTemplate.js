@@ -15,13 +15,13 @@ import {
     Line,
   } from "recharts";
 
-const AreaChartTemplate = ({data,datakey}) => {
+const AreaChartTemplate = ({data,datakey,isOdd}) => {
     console.log(datakey)
   return (
     <>
         <div className="chart">
             <AreaChart
-              width={600}
+              width={isOdd ? 1200: 600}
               height={300}
               data={data}
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}

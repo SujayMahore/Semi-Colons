@@ -31,6 +31,7 @@ const ChartTemplate = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [dataKeys, setDataKeys] = useState(["protein","SGOT"]);
+  const [isOdd,setIsOdd] = useState(false);
 
   //Un Comment This For API CALL
   // const [data,setData]=useState([])
@@ -139,7 +140,13 @@ const ChartTemplate = () => {
   const filteredData = data.map(({ user, reportName, ...rest }) => rest);
   const handleAddChart = () => {
     setDataKeys([...dataKeys, ""]);
+
   };
+  useEffect(()=>{
+    setIsOdd(dataKeys.length % 2 !== 0)
+
+
+  },[dataKeys])
   const handleChange = (index, e) => {
     const updatedKeys = [...dataKeys];
     updatedKeys[index] = e.target.value;
@@ -176,11 +183,9 @@ const ChartTemplate = () => {
           </div>
           <div className="chart-container">
             {/* Apply container style */}
-            <button  onClick={handleAddChart} className="add-chart-button">
-              Add Chart
-            </button>
+            
 
-            <div className="grid-container">
+            <div className={isOdd ?"grid-odd-container"  : "grid-container"}>
               {/* {[...Array(chartCount)].map((_, idx) => (
                 <div>
                   <AreaChartTemplate
@@ -214,11 +219,12 @@ const ChartTemplate = () => {
                   <AreaChartTemplate
                     data={data}
                     datakey={key}
+                    isOdd={isOdd}
                   ></AreaChartTemplate>
                   <div className="input-select">
                     <FormControl fullWidth>
                       <InputLabel id="demo-simple-select-label">
-                        Chart Data
+                        Chart {index + 1}
                       </InputLabel> 
                       <Select
                         labelId="demo-simple-select-label"
@@ -238,7 +244,11 @@ const ChartTemplate = () => {
                 </div>
               ))}
             </div>
+            <button  onClick={handleAddChart} className="add-chart-button">
+              Add Chart
+            </button>
           </div>
+         
           <div
             className="table-container"
             style={{ width: "100%", marginTop: "10px", marginLeft: "40px" }}
