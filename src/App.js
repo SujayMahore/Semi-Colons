@@ -1,12 +1,13 @@
 import './App.css';
-import BarCharts from './components/BarCharts';
+import ChartTemplate from './components/ChartTemplate';
 import Dashboard from './components/Dashboard';
 
 function App() {
+  // console.log(document.documentElement.outerHTML)
   return (
     <div className="App">
       {/* <Dashboard></Dashboard> */}
-      <BarCharts></BarCharts>
+      <ChartTemplate></ChartTemplate>
     </div>
   );
 }
