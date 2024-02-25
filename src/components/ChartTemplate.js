@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./ChartTemplate.css";
 import LineChartCustom from "./LineChartCustom";
 import Box from "@mui/material/Box";
@@ -6,6 +6,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 import {
   BarChart,
@@ -30,8 +32,36 @@ import AreaChartTemplate from "./AreaChartTemplate";
 const ChartTemplate = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [dataKeys, setDataKeys] = useState(["protein","SGOT"]);
-  const [isOdd,setIsOdd] = useState(false);
+  const [dataKeys, setDataKeys] = useState(["protein", "SGOT"]);
+  const [isOdd, setIsOdd] = useState(false);
+  const chartRef = useRef();
+  const tableRef = useRef();
+
+  const handleDownloadPDF = () => {
+    const pdf = new jsPDF("p", "mm", "a4");
+  
+    const chartsPromises = dataKeys.map((key, index) => {
+      return html2canvas(document.querySelector(`#chart-${index}`)).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const imgWidth = 208;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, "PNG", 0, index * imgHeight, imgWidth, imgHeight);
+        return Promise.resolve();
+      });
+    });
+  
+    const tablePromise = html2canvas(tableRef.current).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const imgWidth = 208;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, "PNG", 0, dataKeys.length * 50, imgWidth, imgHeight);
+      return Promise.resolve();
+    });
+  
+    Promise.all([...chartsPromises, tablePromise]).then(() => {
+      pdf.save("download.pdf");
+    });
+  };
 
   //Un Comment This For API CALL
   // const [data,setData]=useState([])
@@ -140,13 +170,10 @@ const ChartTemplate = () => {
   const filteredData = data.map(({ user, reportName, ...rest }) => rest);
   const handleAddChart = () => {
     setDataKeys([...dataKeys, ""]);
-
   };
-  useEffect(()=>{
-    setIsOdd(dataKeys.length % 2 !== 0)
-
-
-  },[dataKeys])
+  useEffect(() => {
+    setIsOdd(dataKeys.length % 2 !== 0);
+  }, [dataKeys]);
   const handleChange = (index, e) => {
     const updatedKeys = [...dataKeys];
     updatedKeys[index] = e.target.value;
@@ -183,9 +210,8 @@ const ChartTemplate = () => {
           </div>
           <div className="chart-container">
             {/* Apply container style */}
-            
 
-            <div className={isOdd ?"grid-odd-container"  : "grid-container"}>
+            <div className="grid-odd-container">
               {/* {[...Array(chartCount)].map((_, idx) => (
                 <div>
                   <AreaChartTemplate
@@ -216,22 +242,25 @@ const ChartTemplate = () => {
               ))} */}
               {dataKeys.map((key, index) => (
                 <div key={index}>
-                  <AreaChartTemplate
-                    data={data}
-                    datakey={key}
-                    isOdd={isOdd}
-                  ></AreaChartTemplate>
+                  <div key={index} id={`chart-${index}`} ref={chartRef}>
+                    <AreaChartTemplate
+                      data={data}
+                      datakey={key}
+                      isOdd={isOdd}
+                    ></AreaChartTemplate>
+                  </div>
+
                   <div className="input-select">
                     <FormControl fullWidth>
                       <InputLabel id="demo-simple-select-label">
                         Chart {index + 1}
-                      </InputLabel> 
+                      </InputLabel>
                       <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={key}
                         label="Select Chart"
-                        onChange={(e)=> handleChange(index,e)}
+                        onChange={(e) => handleChange(index, e)}
                       >
                         {fields.map((field) => (
                           <MenuItem key={field} value={field}>
@@ -244,12 +273,17 @@ const ChartTemplate = () => {
                 </div>
               ))}
             </div>
-            <button  onClick={handleAddChart} className="add-chart-button">
+            <button onClick={handleAddChart} className="add-chart-button">
               Add Chart
             </button>
+            <button onClick={handleDownloadPDF} className="add-chart-button">
+              Download
+            </button>
           </div>
-         
+
           <div
+            ref={tableRef}
+            id="table"
             className="table-container"
             style={{ width: "100%", marginTop: "10px", marginLeft: "40px" }}
           >
