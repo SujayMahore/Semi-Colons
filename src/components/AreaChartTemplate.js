@@ -21,7 +21,7 @@ const AreaChartTemplate = ({data,datakey,isOdd}) => {
     <>
         <div className="chart">
             <AreaChart
-              width={isOdd ? 1200: 600}
+              width={ 1200}
               height={300}
               data={data}
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
